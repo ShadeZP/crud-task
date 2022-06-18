@@ -1,0 +1,17 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "airbnb-base",
+    "airbnb-typescript/base"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "project": "./ts.config.json"
+  },
+  "rules": {}
+}
