@@ -13,7 +13,9 @@ import Url from './consts/url';
 import checkUserData from './utils/check-user-data';
 import getRequestBody from './utils/get-request-body';
 import { User } from './models/user';
-import { badRequest, errorHandler } from './utils/error-handler';
+import {
+  badId, badRequest, errorHandler, routeNotFound,
+} from './utils/error-handler';
 
 const server = createServer((req, res) => {
   const { url, method } = req;
@@ -26,7 +28,7 @@ const server = createServer((req, res) => {
     const id: string = url.split('/')[3];
     const ifUuid: boolean = uuidValidator(id);
     if (!ifUuid) {
-      badRequest(res);
+      badId(res);
     } else {
       getUserById(res, id);
     }
@@ -52,7 +54,7 @@ const server = createServer((req, res) => {
         const id: string = url.split('/')[3];
         const ifUuid: boolean = uuidValidator(id);
         if (!ifUuid) {
-          badRequest(res);
+          badId(res);
         } else {
           updateUser(res, user, id);
         }
@@ -65,10 +67,12 @@ const server = createServer((req, res) => {
     const ifUuid: boolean = uuidValidator(id);
 
     if (!ifUuid) {
-      badRequest(res);
+      badId(res);
     } else {
       deleteUser(res, id);
     }
+  } else {
+    routeNotFound(res);
   }
 });
 
