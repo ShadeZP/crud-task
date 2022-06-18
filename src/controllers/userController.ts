@@ -2,7 +2,7 @@ import { ServerResponse } from 'http';
 import {
   addUserToDb,
   getUserFromDb,
-  getUsersFromDb,
+  getUsersFromDb, removeUserFromDb,
   updateUserInDb,
 } from '../db/db';
 import { errorHandler, userNotFound } from '../utils/error-handler';
@@ -60,9 +60,25 @@ async function updateUser(res: ServerResponse, user: User, id: string): Promise<
   }
 }
 
+async function deleteUser(res: ServerResponse, id: string): Promise<void> {
+  try {
+    const isUserRemoved = await removeUserFromDb(id);
+
+    if (!isUserRemoved) {
+      userNotFound(res);
+    } else {
+      res.writeHead(204, { 'Content-type': 'application/json' });
+      res.end();
+    }
+  } catch (error) {
+    errorHandler(res);
+  }
+}
+
 export {
   getUsers,
   getUserById,
   createUser,
   updateUser,
+  deleteUser,
 };

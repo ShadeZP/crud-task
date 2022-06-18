@@ -1,7 +1,11 @@
 import 'dotenv/config';
 import { createServer } from 'http';
 import {
-  createUser, getUserById, getUsers, updateUser,
+  createUser,
+  deleteUser,
+  getUserById,
+  getUsers,
+  updateUser,
 } from './controllers/userController';
 import uuidValidator from './utils/uuid-validator';
 import Method from './consts/method';
@@ -56,6 +60,15 @@ const server = createServer((req, res) => {
       .catch(() => {
         errorHandler(res);
       });
+  } else if (url.match(/\/api\/users\/.+/) && method === Method.Delete) {
+    const id: string = url.split('/')[3];
+    const ifUuid: boolean = uuidValidator(id);
+
+    if (!ifUuid) {
+      badRequest(res);
+    } else {
+      deleteUser(res, id);
+    }
   }
 });
 

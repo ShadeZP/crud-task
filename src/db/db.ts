@@ -11,6 +11,7 @@ function getUsersFromDb(): Promise<User[]> {
 function getUserFromDb(id: string): Promise<User | undefined> {
   return new Promise((resolve) => {
     const user = users.find((u) => u.id === id);
+
     resolve(user);
   });
 }
@@ -21,6 +22,7 @@ function addUserToDb(user: User): Promise<User> {
       ...user,
       id: uuid(),
     };
+
     users.push(validUser);
     resolve(validUser);
   });
@@ -32,16 +34,34 @@ function updateUserInDb(user: User, id: string): Promise<User | null> {
 
     if (userIndex === -1) {
       resolve(null);
-    }
+    } else {
+      users[userIndex] = {
+        ...users[userIndex],
+        ...user,
+      };
 
-    users[userIndex] = {
-      ...users[userIndex],
-      ...user,
-    };
-    resolve(users[userIndex]);
+      resolve(users[userIndex]);
+    }
+  });
+}
+
+function removeUserFromDb(id: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    const userIndex = users.findIndex((u) => u.id === id);
+
+    if (userIndex === -1) {
+      resolve(false);
+    } else {
+      users.splice(userIndex, 1);
+      resolve(true);
+    }
   });
 }
 
 export {
-  getUsersFromDb, getUserFromDb, addUserToDb, updateUserInDb,
+  getUsersFromDb,
+  getUserFromDb,
+  addUserToDb,
+  updateUserInDb,
+  removeUserFromDb,
 };
