@@ -1,13 +1,15 @@
 import 'dotenv/config';
 import { createServer } from 'http';
-import { createUser, getUserById, getUsers } from './controllers/userController';
+import {
+  createUser, getUserById, getUsers, updateUser,
+} from './controllers/userController';
 import uuidValidator from './utils/uuid-validator';
 import Method from './consts/method';
 import Url from './consts/url';
 import checkUserData from './utils/check-user-data';
 import getRequestBody from './utils/get-request-body';
 import { User } from './models/user';
-import { badRequest, errorHandler } from './consts/error-handler';
+import { badRequest, errorHandler } from './utils/error-handler';
 
 const server = createServer((req, res) => {
   const { url, method } = req;
@@ -34,6 +36,21 @@ const server = createServer((req, res) => {
           badRequest(res);
         } else {
           createUser(res, user);
+        }
+      })
+      .catch(() => {
+        errorHandler(res);
+      });
+  } else if (url.match(/\/api\/users\/.+/) && method === Method.Put) {
+    getRequestBody(req)
+      .then((data) => {
+        const user: User = JSON.parse(data);
+        const id: string = url.split('/')[3];
+        const ifUuid: boolean = uuidValidator(id);
+        if (!ifUuid) {
+          badRequest(res);
+        } else {
+          updateUser(res, user, id);
         }
       })
       .catch(() => {

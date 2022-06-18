@@ -10,7 +10,6 @@ function getRequestBody(req: IncomingMessage): Promise<string> {
       });
 
       req.on('end', () => {
-        console.log(body);
         resolve(body);
       });
     } catch (err) {

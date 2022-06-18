@@ -26,4 +26,22 @@ function addUserToDb(user: User): Promise<User> {
   });
 }
 
-export { getUsersFromDb, getUserFromDb, addUserToDb };
+function updateUserInDb(user: User, id: string): Promise<User | null> {
+  return new Promise((resolve) => {
+    const userIndex = users.findIndex((u) => u.id === id);
+
+    if (userIndex === -1) {
+      resolve(null);
+    }
+
+    users[userIndex] = {
+      ...users[userIndex],
+      ...user,
+    };
+    resolve(users[userIndex]);
+  });
+}
+
+export {
+  getUsersFromDb, getUserFromDb, addUserToDb, updateUserInDb,
+};

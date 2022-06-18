@@ -10,4 +10,9 @@ function badRequest(res:ServerResponse): void {
   res.end(JSON.stringify({ message: 'Invalid Data In Request' }));
 }
 
-export { errorHandler, badRequest };
+function userNotFound(res:ServerResponse): void {
+  res.writeHead(404, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ message: 'User Not Found' }));
+}
+
+export { errorHandler, badRequest, userNotFound };

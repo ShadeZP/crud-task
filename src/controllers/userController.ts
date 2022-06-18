@@ -1,6 +1,11 @@
-import { IncomingMessage, ServerResponse } from 'http';
-import { addUserToDb, getUserFromDb, getUsersFromDb } from '../db/db';
-import { errorHandler } from '../consts/error-handler';
+import { ServerResponse } from 'http';
+import {
+  addUserToDb,
+  getUserFromDb,
+  getUsersFromDb,
+  updateUserInDb,
+} from '../db/db';
+import { errorHandler, userNotFound } from '../utils/error-handler';
 import { User } from '../models/user';
 
 async function getUsers(res: ServerResponse): Promise<void> {
@@ -19,8 +24,7 @@ async function getUserById(res: ServerResponse, id: string): Promise<void> {
     const user = await getUserFromDb(id);
 
     if (!user) {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: 'User Not Found' }));
+      userNotFound(res);
     } else {
       res.writeHead(200, { 'Content-type': 'application/json' });
       res.end(JSON.stringify(user));
@@ -41,4 +45,24 @@ async function createUser(res: ServerResponse, user: User): Promise<void> {
   }
 }
 
-export { getUsers, getUserById, createUser };
+async function updateUser(res: ServerResponse, user: User, id: string): Promise<void> {
+  try {
+    const updatedUser = await updateUserInDb(user, id);
+
+    if (!updatedUser) {
+      userNotFound(res);
+    } else {
+      res.writeHead(200, { 'Content-type': 'application/json' });
+      res.end(JSON.stringify(updatedUser));
+    }
+  } catch (error) {
+    errorHandler(res);
+  }
+}
+
+export {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+};
