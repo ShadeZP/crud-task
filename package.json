@@ -1,9 +1,14 @@
 {
   "devDependencies": {
+    "@types/jest": "^28.1.2",
+    "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "eslint": "^8.17.0",
+    "jest": "^28.1.1",
     "nodemon": "^2.0.16",
+    "supertest": "^6.2.3",
+    "ts-jest": "^28.0.5",
     "ts-loader": "^9.3.0",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.4",
@@ -14,7 +19,8 @@
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
     "start:dev": "nodemon src/index.ts",
-    "start:prod": "webpack --mode development && node dist/index.bundle.js"
+    "start:prod": "webpack --mode development && node dist/index.bundle.js",
+    "test": "jest --runInBand"
   },
   "dependencies": {
     "@types/node": "^17.0.44",
