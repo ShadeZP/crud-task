@@ -78,6 +78,8 @@ const server = createServer((req, res) => {
 
 const port = parseInt(process.env.PORT as string, 10) || 3000;
 
-server.listen(port, () => console.log(`Server is running on port ${port}`));
+if (process.env.NODE_ENV !== 'test') {
+  server.listen(port, () => console.log(`Server is running on port ${port}`));
+}
 
 export default server;

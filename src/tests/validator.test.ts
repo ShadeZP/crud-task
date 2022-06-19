@@ -11,10 +11,6 @@ const badMockUser = {
 const badUUID: string = '9a9bc960-4838-4d80-bb2a-f2cb51e40b0z';
 
 describe('User validation suit', () => {
-  afterAll(() => {
-    server.close();
-  });
-
   describe('create user with incorrect body', () => {
     test('should return 400 error', async () => {
       const response = await request(server)

@@ -11,10 +11,6 @@ const mockUser: User = {
 };
 
 describe('User initial suit', () => {
-  afterAll(() => {
-    server.close();
-  });
-
   describe('initial return no user', () => {
     test('status should be equal 200', async () => {
       const response = await request(server)

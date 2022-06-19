@@ -6,10 +6,6 @@ import Url from '../consts/url';
 const nonExistUUID: string = '9a9bc960-4838-4d80-bb2a-f2cb51e40b0a';
 
 describe('User initial suit', () => {
-  afterAll(() => {
-    server.close();
-  });
-
   describe('initial return no user', () => {
     test('status should be equal 200', async () => {
       const response = await request(server)
