@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import { createServer } from 'http';
+import cluster from 'cluster';
+import os from 'os';
 import {
   createUser,
   deleteUser,
@@ -18,6 +20,9 @@ import {
 } from './utils/error-handler';
 
 const server = createServer((req, res) => {
+  if (cluster.isWorker) {
+    console.log(`Worker ${cluster.worker.id} handle request`);
+  }
   const { url, method } = req;
   if (!url || !method) {
     res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -79,7 +84,25 @@ const server = createServer((req, res) => {
 const port = parseInt(process.env.PORT as string, 10) || 3000;
 
 if (process.env.NODE_ENV !== 'test') {
-  server.listen(port, () => console.log(`Server is running on port ${port}`));
+  if (process.argv[2] === '--multi') {
+    if (cluster.isPrimary) {
+      const cpus = os.cpus().length;
+
+      for (let i = 0; i < cpus; i += 1) cluster.fork();
+
+      cluster.on('exit', (worker, code) => {
+        console.log(
+          `Worker ${worker.id} finished. Exit code: ${code}`,
+        );
+
+        server.listen(port, () => console.log(`Worker ${cluster.worker.id} launched`));
+      });
+    } else {
+      server.listen(port, () => console.log(`Worker ${cluster.worker.id} launched`));
+    }
+  } else {
+    server.listen(port, () => console.log(`Server is running on port ${port}`));
+  }
 }
 
 export default server;
